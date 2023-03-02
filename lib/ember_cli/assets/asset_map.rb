@@ -23,8 +23,13 @@ module EmberCli
         assert_asset_map!
 
         Nokogiri::HTML(index_html.read).css('link[rel="stylesheet"]').map {|s|
-          filename = File.basename(s['href'])
-          asset_matching(/#{Regexp.escape(filename)}\z/)
+          href = s['href']
+          if href =~ /^http/
+            href
+          else
+            filename = File.basename(s['href'])
+            asset_matching(/#{Regexp.escape(filename)}\z/)
+          end
         }
       end
 
